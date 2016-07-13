@@ -68,11 +68,6 @@ setup(
     ],
     include_package_data=True,
     packages=find_packages(),
-    install_requires=[
-        'time',
-        'datetime',
-        'urllib'
-    ],
     url=source,
     version=version,
     zip_safe=True,
