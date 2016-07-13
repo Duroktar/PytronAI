@@ -20,7 +20,8 @@ Simple:
 Example
 =======
 
- BE SURE TO APPEND THE ACTUAL PATH WITH ( ex: r'C:\yaddayadda\' ) TO MAKE IT A RAW STRING !!!! NOT THE VARIABLE YOU ASSIGN PATH TO
+ BE SURE TO APPEND THE ACTUAL PATH WITH r TO MAKE IT A RAW STRING (ex: r'C:\Path\To\Links\Scripts')
+
 
 .. code-block:: python
 
