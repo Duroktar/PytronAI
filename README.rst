@@ -16,7 +16,7 @@ Simple:
 
 .. code-block:: console
 
-    $ pip install pytronlinks
+    pip install pytronlinks
 
 
 Example
