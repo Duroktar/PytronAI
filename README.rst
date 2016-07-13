@@ -2,21 +2,19 @@
 pytron
 ======
 
-
 Interface with your Links AI and send commands from within your Python scripts.
 
-
+  http://mega-voice-command.com/
 
 
 Installation
 ============
 
-
 Simple:
 
-.. code-block:: console
-
     pip install pytronlinks
+
+    install LINKS   ( http://mega-voice-command.com/ )
 
 
 Example
