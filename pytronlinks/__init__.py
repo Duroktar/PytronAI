@@ -6,6 +6,8 @@
 
     Links for Python
 
+          http://mega-voice-command.com/
+
     :copyright: (c) 2016 by traBpUkciP.
     :license: BSD, see LICENSE for more details.
 """

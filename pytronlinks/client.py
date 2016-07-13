@@ -6,6 +6,8 @@
 
     Links for Python. Interact with Links from your scripts!
 
+     http://mega-voice-command.com/
+
     :copyright: (c) 2016 by traBpUkciP.
     :license: BSD, see LICENSE for more details.
 """
@@ -19,6 +21,7 @@ import urllib
 class Client(object):
     """A Python client for the Mega Voice Command AI LINKS-MarkII
 
+         http://mega-voice-command.com/
 
     """
 
