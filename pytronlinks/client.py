@@ -32,6 +32,7 @@ class Client(object):
         :param key: Links web key
         :param ip: ip of computer with links
         :param path: Path to Links Scripts Folder ( MUST BE RAW ) ie: (r'PATH')
+          ex: ai = pytronlinks.Client(path='C:\\temp', ip='176.0.0.16', key='NeWkEy123')
 
         :Example:
 
@@ -39,6 +40,7 @@ class Client(object):
 
             path = (r'C:\users\default\AppData\Roaming\LINKS\Customization\Scripts')
             ai = pytronlinks.Client(path)
+
 
         """
         self.path = path
