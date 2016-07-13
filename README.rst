@@ -20,6 +20,8 @@ Simple:
 Example
 =======
 
+ BE SURE TO APPEND THE ACTUAL PATH WITH ( ex: r'C:\yaddayadda\' ) TO MAKE IT A RAW STRING !!!! NOT THE VARIABLE YOU ASSIGN PATH TO
+
 .. code-block:: python
 
     import pytronlinks
