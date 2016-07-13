@@ -31,6 +31,14 @@ Example
 
     ai = pytronlinks.Client(path)
 
+      """
+      Optional client parameters-
+        port: Port that links is listening on
+        key: Links web key
+        ip: ip of computer with links
+
+      ex: ai = pytronlinks.Client(path='C:\\temp', ip='192.0.0.16', key='KEY123')
+      """
 
 Make Links speak!
 =================
