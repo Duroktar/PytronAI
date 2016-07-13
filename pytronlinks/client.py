@@ -28,6 +28,9 @@ class Client(object):
     def __init__(self, path, port='54657', key='ABC1234', ip='localhost'):
         """A client for the Facebook Chat (Messenger).
 
+        :param port: Port that links is listening on
+        :param key: Links web key
+        :param ip: ip of computer with links
         :param path: Path to Links Scripts Folder ( MUST BE RAW ) ie: (r'PATH')
 
         :Example:
