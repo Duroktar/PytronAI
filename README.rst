@@ -12,7 +12,7 @@ Installation
 
 Simple:
 
-    pip install pytronlinks
+    pip install pytronlinks --upgrade
 
     install LINKS   ( http://mega-voice-command.com/ )
 
