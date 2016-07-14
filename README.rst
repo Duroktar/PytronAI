@@ -6,14 +6,6 @@ Interface with your Links AI and send commands from within your Python scripts.
 
   http://mega-voice-command.com/
 
-New features! -
-    Changelog- v.0.2.1
-    - Added APPDATA as default path to LINKS Install ( ai = pytronlinks.Client() )
-    - Added 'Loquendo by Nuance' function wrapper
-    - Added a bunch of other LINKS function as well ( check the README )
-    - Adding get json response verification ( Adding type of response as parameter )
-    - Added custom function parser
-
 
 Installation
 ============
@@ -54,10 +46,10 @@ Make Links speak!
 
     import pytronlinks
 
-    PATH = (r'C:\users\default\AppData\Roaming\LINKS\Customization\Scripts')
+    
     TEXT = ('MVC Rocks!')
 
-    ai = pytronlinks.Client(PATH)
+    ai = pytronlinks.Client()
     ai.talk(TEXT)
 
 
@@ -68,10 +60,10 @@ Emulate speech to Links
 
     import pytronlinks
 
-    PATH = (r'C:\users\default\AppData\Roaming\LINKS\Customization\Scripts')
+    
     TEXT = ('what is the weather like')
 
-    ai = pytronlinks.Client(PATH)
+    ai = pytronlinks.Client()
     ai.emulate_speech(TEXT)
 
         Will call the command as if you had spoken to links directly
@@ -108,8 +100,8 @@ Put script into listen mode
           Action: CMD /m /c "echo {speech} > \dictation.txt"
     """
 
-    PATH = (r'C:\users\default\AppData\Roaming\LINKS\Customization\Scripts')
-    ai = pytronlinks.Client(PATH)
+    
+    ai = pytronlinks.Client()
 
     def main():
         dictation = listen()
@@ -141,6 +133,18 @@ Sends a 'Loquendo by Nuance' speech command ( requires Nuance Loquendo voices )
 
     ai = pytronlinks.Client()
     ai.LoqSpeak("I am an example","100","50","Simon")]
+    
+Updates
+=======
+
+New features! -
+    Changelog- v.0.2.1
+    - Added APPDATA as default path to LINKS Install ( ai = pytronlinks.Client() )
+    - Added 'Loquendo by Nuance' function wrapper
+    - Added a bunch of other LINKS function as well ( check the README )
+    - Adding get json response verification ( Adding type of response as parameter )
+    - Added custom function parser
+
 
 Authors
 =======
