@@ -142,6 +142,7 @@ Sends a 'Loquendo by Nuance' speech command ( requires Nuance Loquendo voices )
     ai = pytronlinks.Client()
     ai.LoqSpeak("I am an example","100","50","Simon")]
 
+
 Authors
 =======
 
