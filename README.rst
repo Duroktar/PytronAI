@@ -2,8 +2,11 @@
 pytron v0.2.1
 =============
 
-Interface with your Links AI and send commands from within your Python scripts.
+Interface with your Links AI and send commands from within your Python scripts. Most of Links built in functions
+can be accessed by name with more being added all the time. If you have any requests feel free tolet me know,
+e-mail is down below. Thanks!
 
+  Links: ( Free Windows AI Software )
   http://mega-voice-command.com/
 
 
@@ -92,21 +95,23 @@ Put script into listen mode
 
     import pytronlinks
     """
-        To get dictation from Links into the dictation.txt file for pytron
-        to do something with, make a command in Links like this -
+            ** Make a command in links social tab like this **
+         Command: Links {speech=test_dictation}
+         Response: [Set("Pytron", {speech})]
+         Profile: Main
 
-          Command: pytron {speech=test_dictation}
-          Response:
-          Action: CMD /m /c "echo {speech} > \dictation.txt"
+         And use the dictation in Pytron with the script below.. ( Ctrl-c to quit )
     """
 
-    
+    import pytronlinks
+
     ai = pytronlinks.Client()
 
     def main():
         dictation = listen()
-        if x:
-            ( do something with dictation )
+        if dictation:
+            # ( do something with dictation )
+            print(dictation)
             return
 
     try:
@@ -139,6 +144,10 @@ Updates
 =======
 
 New features! -
+    Changelog- v.0.3.1
+    - Added XML support for access to Links UserVariables.xml file
+    - Added more function wrappers - [Get("")], [Set("", "")]
+
     Changelog- v.0.2.1
     - Added APPDATA as default path to LINKS Install ( ai = pytronlinks.Client() )
     - Added 'Loquendo by Nuance' function wrapper

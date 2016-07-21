@@ -341,23 +341,17 @@ ul.auto-toc {
 <div class="document" id="pytron-v0-2-1">
 <h1 class="title">pytron v0.2.1</h1>
 
-<p>Interface with your Links AI and send commands from within your Python scripts.</p>
+<p>Interface with your Links AI and send commands from within your Python scripts. Most of Links built in functions
+can be accessed by name with more being added all the time. If you have any requests feel free tolet me know,
+e-mail is down below. Thanks!</p>
 <blockquote>
+Links: ( Free Windows AI Software )
 <a class="reference external" href="http://mega-voice-command.com/">http://mega-voice-command.com/</a></blockquote>
-<dl class="docutils">
-<dt>New features! -</dt>
-<dd>Changelog- v.0.2.1
-- Added APPDATA as default path to LINKS Install ( ai = pytronlinks.Client() )
-- Added 'Loquendo by Nuance' function wrapper
-- Added a bunch of other LINKS function as well ( check the README )
-- Adding get json response verification ( Adding type of response as parameter )
-- Added custom function parser</dd>
-</dl>
 <div class="section" id="installation">
 <h1>Installation</h1>
 <p>Simple:</p>
 <blockquote>
-<p>pip install pytronlinks</p>
+<p>pip install pytronlinks --upgrade</p>
 <p>install LINKS   ( <a class="reference external" href="http://mega-voice-command.com/">http://mega-voice-command.com/</a> )</p>
 </blockquote>
 </div>
@@ -386,10 +380,10 @@ ul.auto-toc {
 <pre class="code python literal-block">
 <span class="keyword namespace">import</span> <span class="name namespace">pytronlinks</span>
 
-<span class="name">PATH</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="literal string single">r'C:\users\default\AppData\Roaming\LINKS\Customization\Scripts'</span><span class="punctuation">)</span>
+
 <span class="name">TEXT</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="literal string single">'MVC Rocks!'</span><span class="punctuation">)</span>
 
-<span class="name">ai</span> <span class="operator">=</span> <span class="name">pytronlinks</span><span class="operator">.</span><span class="name">Client</span><span class="punctuation">(</span><span class="name">PATH</span><span class="punctuation">)</span>
+<span class="name">ai</span> <span class="operator">=</span> <span class="name">pytronlinks</span><span class="operator">.</span><span class="name">Client</span><span class="punctuation">()</span>
 <span class="name">ai</span><span class="operator">.</span><span class="name">talk</span><span class="punctuation">(</span><span class="name">TEXT</span><span class="punctuation">)</span>
 </pre>
 </div>
@@ -398,10 +392,10 @@ ul.auto-toc {
 <pre class="code python literal-block">
 <span class="keyword namespace">import</span> <span class="name namespace">pytronlinks</span>
 
-<span class="name">PATH</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="literal string single">r'C:\users\default\AppData\Roaming\LINKS\Customization\Scripts'</span><span class="punctuation">)</span>
+
 <span class="name">TEXT</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="literal string single">'what is the weather like'</span><span class="punctuation">)</span>
 
-<span class="name">ai</span> <span class="operator">=</span> <span class="name">pytronlinks</span><span class="operator">.</span><span class="name">Client</span><span class="punctuation">(</span><span class="name">PATH</span><span class="punctuation">)</span>
+<span class="name">ai</span> <span class="operator">=</span> <span class="name">pytronlinks</span><span class="operator">.</span><span class="name">Client</span><span class="punctuation">()</span>
 <span class="name">ai</span><span class="operator">.</span><span class="name">emulate_speech</span><span class="punctuation">(</span><span class="name">TEXT</span><span class="punctuation">)</span>
 
     <span class="name">Will</span> <span class="name">call</span> <span class="name">the</span> <span class="name">command</span> <span class="keyword">as</span> <span class="keyword">if</span> <span class="name">you</span> <span class="name">had</span> <span class="name">spoken</span> <span class="name">to</span> <span class="name">links</span> <span class="name">directly</span>
@@ -426,21 +420,23 @@ Anything you can put in Links <em>Action</em> bar, you can put in here! See exam
 <pre class="code python literal-block">
 <span class="keyword namespace">import</span> <span class="name namespace">pytronlinks</span>
 <span class="literal string doc">&quot;&quot;&quot;
-    To get dictation from Links into the dictation.txt file for pytron
-    to do something with, make a command in Links like this -
+        ** Make a command in links social tab like this **
+     Command: Links {speech=test_dictation}
+     Response: [Set(&quot;Pytron&quot;, {speech})]
+     Profile: Main
 
-      Command: pytron {speech=test_dictation}
-      Response:
-      Action: CMD /m /c &quot;echo {speech} &gt; \dictation.txt&quot;
+     And use the dictation in Pytron with the script below.. ( Ctrl-c to quit )
 &quot;&quot;&quot;</span>
 
-<span class="name">PATH</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="literal string single">r'C:\users\default\AppData\Roaming\LINKS\Customization\Scripts'</span><span class="punctuation">)</span>
-<span class="name">ai</span> <span class="operator">=</span> <span class="name">pytronlinks</span><span class="operator">.</span><span class="name">Client</span><span class="punctuation">(</span><span class="name">PATH</span><span class="punctuation">)</span>
+<span class="keyword namespace">import</span> <span class="name namespace">pytronlinks</span>
+
+<span class="name">ai</span> <span class="operator">=</span> <span class="name">pytronlinks</span><span class="operator">.</span><span class="name">Client</span><span class="punctuation">()</span>
 
 <span class="keyword">def</span> <span class="name function">main</span><span class="punctuation">():</span>
     <span class="name">dictation</span> <span class="operator">=</span> <span class="name">listen</span><span class="punctuation">()</span>
-    <span class="keyword">if</span> <span class="name">x</span><span class="punctuation">:</span>
-        <span class="punctuation">(</span> <span class="name">do</span> <span class="name">something</span> <span class="keyword">with</span> <span class="name">dictation</span> <span class="punctuation">)</span>
+    <span class="keyword">if</span> <span class="name">dictation</span><span class="punctuation">:</span>
+        <span class="comment single"># ( do something with dictation )</span>
+        <span class="keyword">print</span><span class="punctuation">(</span><span class="name">dictation</span><span class="punctuation">)</span>
         <span class="keyword">return</span>
 
 <span class="keyword">try</span><span class="punctuation">:</span>
@@ -478,6 +474,22 @@ Anything you can put in Links <em>Action</em> bar, you can put in here! See exam
 <span class="name">ai</span> <span class="operator">=</span> <span class="name">pytronlinks</span><span class="operator">.</span><span class="name">Client</span><span class="punctuation">()</span>
 <span class="name">ai</span><span class="operator">.</span><span class="name">LoqSpeak</span><span class="punctuation">(</span><span class="literal string double">&quot;I am an example&quot;</span><span class="punctuation">,</span><span class="literal string double">&quot;100&quot;</span><span class="punctuation">,</span><span class="literal string double">&quot;50&quot;</span><span class="punctuation">,</span><span class="literal string double">&quot;Simon&quot;</span><span class="punctuation">)]</span>
 </pre>
+</div>
+<div class="section" id="updates">
+<h1>Updates</h1>
+<dl class="docutils">
+<dt>New features! -</dt>
+<dd><p class="first">Changelog- v.0.3.1
+- Added XML support for access to Links UserVariables.xml file
+- Added more function wrappers - [Get(&quot;&quot;)], [Set(&quot;&quot;, &quot;&quot;)]</p>
+<p class="last">Changelog- v.0.2.1
+- Added APPDATA as default path to LINKS Install ( ai = pytronlinks.Client() )
+- Added 'Loquendo by Nuance' function wrapper
+- Added a bunch of other LINKS function as well ( check the README )
+- Adding get json response verification ( Adding type of response as parameter )
+- Added custom function parser</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="authors">
 <h1>Authors</h1>
