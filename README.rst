@@ -1,14 +1,15 @@
 =============
-pytron v0.3.1
+pytron v0.3.2
 =============
 
 Interface with your Links AI and send commands from within your Python scripts. Most of Links built in functions
-can be accessed by name with more being added all the time. If you have any requests feel free tolet me know,
+can be accessed by name with more being added all the time. If you have any requests feel free to let me know,
 e-mail is down below. Thanks!
 
   Links: ( Free Windows AI Software )
   http://mega-voice-command.com/
 
+  ** Changelog at bottom of page under Updates **
 
 Installation
 ============

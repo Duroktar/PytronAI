@@ -11,6 +11,13 @@
     :copyright: (c) 2016 by traBpUkciP.
     :license: BSD, see LICENSE for more details.
 
+
+    Changelog- v.0.3.2
+    - Better error response handling in _get_request() ( uses ast standard library module )
+    - Optimized _get_xml() & _clear_xml() ( Thanks Zunair )
+    - Fixed Get() function  ( typo in url )
+
+
     Changelog- v.0.3.1
     - Added XML support for access to Links UserVariables.xml file
     - Added more function wrappers - [Get("")], [Set("", "")]
@@ -30,6 +37,7 @@ from time import sleep, time
 import datetime
 import urllib
 import xml.etree.ElementTree as ET
+import ast
 
 
 class Client(object):
@@ -236,7 +244,7 @@ class Client(object):
 
     def Get(self, var_name):
         try:
-            fcn = '[Get("{}"]'.format(var_name)
+            fcn = '[Get("{}")]'.format(var_name)
             self._get_request(fcn)
             return self._get_xml(var_name)
         except Exception as e:
@@ -415,6 +423,7 @@ class Client(object):
                     v = variable.find('Value')
                     t = v.text
                     response = t
+                    break
             return response
         except Exception as e:
             print("Exception in _get_xml function")
@@ -435,6 +444,7 @@ class Client(object):
                 if n == var_name:
                     v = variable.find('Value')
                     v.clear()
+                    break
             tree.write(_path)
             return
         except Exception as e:
@@ -470,15 +480,29 @@ class Client(object):
             port = self.port
             key = self.key
             url = 'http://{}:{}/?action={}&key={}&request=enable&output=json'.format(ip, port, fcn, key)
-            r = urllib.urlopen(url)
+            r = urllib.urlopen(url, context="'application/json")
             if r.code and r.code == 200:
-                return
+                x = r.readlines()[3]
+                j = ast.literal_eval(x)
+                err = (j['error'])
+                if len(err) > 0:
+                    print("v" * 20)
+                    res = (j['response'])
+                    z = err + "\n" + res
+                    print(z)
+                    print("^" * 20)
+                    print("\n")
+                    return False
+                else:
+                    return
             elif r.code:
                 print('Error {}'.format(r.code))
             else:
                 print("Something went terribly wrong.....")
-        except (TypeError, IOError, Exception):
-            print("Exception in _get_request function")
+        except Exception as e:
+            print("***Exception in _get_request function. Check your ip, port and key settings!***")
+            print("Also your shoes are untied..")
+            print("Exception: " + str(e))
             return
 
     def _write_history(self, text):
@@ -524,8 +548,13 @@ class Client(object):
 if __name__ == '__main__':
     ai = Client()
     ai.talk('Hello')
+    ai.Set('Pytron', 'This is the first test')
     test = ai.Get('Pytron')
-    print('1', test)
-    ai.Set('Pytron', 'This is a test')
+    ai.talk(test)
+    ai.Set('Pytron', 'This is the second test')
     test = ai.Get('Pytron')
-    print('2', test)
+    ai.talk(test)
+    ai.emulate_speech("what time is it")
+    ai2 = Client(key='asdfasdf')
+    ai2.talk('this is a false test')
+    # ai.listen()
