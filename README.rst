@@ -1,5 +1,5 @@
 =============
-pytron v0.2.1
+pytron v0.3.1
 =============
 
 Interface with your Links AI and send commands from within your Python scripts. Most of Links built in functions
