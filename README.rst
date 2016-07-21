@@ -129,7 +129,7 @@ Sends a 'Loquendo by Nuance' speech command ( requires Nuance Loquendo voices )
 
         :param text: Text to be spoken ( with all the syntax they use, better make it raw, ie: r'text' )
         :param volume: Volume 0 - 100
-        :param rate: Unsure of rate   ( needs testing )
+        :param rate: Rate of speech 0 - 100 ( 50 is default )
         :param ai_name: Name of tts Voice ( case sensitive )
 
   Example:
