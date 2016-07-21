@@ -11,6 +11,11 @@
     :copyright: (c) 2016 by traBpUkciP.
     :license: BSD, see LICENSE for more details.
 
+    Changelog- v.0.3.1
+    - Added XML support for access to Links UserVariables.xml file
+    - Added more function wrappers - [Get("")], [Set("", "")]
+
+
     Changelog- v.0.2.1
     - Added APPDATA as default path to LINKS Install
     - Added 'Loquendo by Nuance' function wrapper
@@ -21,12 +26,10 @@
 """
 
 import os
-from time import sleep
-import time
+from time import sleep, time
 import datetime
 import urllib
-
-APPDATA = os.getenv(r'APPDATA') + r'\LINKS\Customization\Scripts'
+import xml.etree.ElementTree as ET
 
 
 class Client(object):
@@ -36,7 +39,11 @@ class Client(object):
 
     """
 
-    def __init__(self, path=APPDATA, port='54657', key='ABC1234', ip='localhost'):
+    _APPDATA = os.getenv(r'APPDATA')
+    _SCRIPTS_PATH = _APPDATA + r'\LINKS\Customization\Scripts'
+    _XML_PATH = _APPDATA + r'\LINKS\Customization\XML'
+
+    def __init__(self, path=_XML_PATH, port='54657', key='ABC1234', ip='localhost'):
         """ Initialize Client, either with custom parameters or the common default values
 
         :param port: Port that links is listening on
@@ -130,22 +137,34 @@ class Client(object):
         self._get_request(string)
         return
 
-    def listen(self, freq=0.2):
-        """ Actively checks for user Input and returns that input when found. ( BLOCKING )
+    # Checks for any value in the UserVariables.xml file and returns it input when found. ( BLOCKING )
+    def listen(self, var_name='Pytron', freq=0.2):
+        """ Check out the example to see how you could use this. This is probably the most powerful feature.
 
-        :param freq: Delay ( in seconds ) between checks for user input in dictation.txt
+        :param var_name: Name of the Variable you want to "listen" to. OPTIONAL. Defaults to 'Pytron'
+        :param freq: Delay ( in seconds ) between checks. OPTIONAL. Defaults to 0.2 seconds
+
+
+
+            ** Make a command in links social tab like this **
+         Command: Links {speech=test_dictation}
+         Response: [Set("Pytron", {speech})]
+         Profile: Main
+
+         And use the dictation in Pytron with the script below.. ( Ctrl-c to quit )
+            v        v         v         v         v
 
         :Example:
 
             import pytronlinks
 
-            PATH = (r'C:\users\default\AppData\Roaming\LINKS\Customization\Scripts')
-            ai = pytronlinks.Client(PATH)
+            ai = pytronlinks.Client()
 
             def main():
                 dictation = listen()
-                if x:
-                    ( do something with dictation )
+                if dictation:
+                    # ( do something with dictation )
+                    print(dictation)
                     return
 
             try:
@@ -155,15 +174,18 @@ class Client(object):
                 pass
         """
         try:
+            self._clear_xml(var_name)
             print("Awaiting commands")
             while True:
-                x = self.check_for_input()
+                x = self._get_xml()
                 if x:
-                    print(x)
-                    continue
+                    answer = x
+                    self._clear_xml(var_name)
+                    return answer
                 else:
                     sleep(freq)
         except Exception as e:
+            print("Exception in listen function! Get under the desk quick!")
             print(e)
 
     def config(self):
@@ -210,6 +232,25 @@ class Client(object):
         except Exception as e:
             print(e)
             print("Exception in LoqSpeak function")
+            return
+
+    def Get(self, var_name):
+        try:
+            fcn = '[Get("{}"]'.format(var_name)
+            self._get_request(fcn)
+            return self._get_xml(var_name)
+        except Exception as e:
+            print(e)
+            print("Exception in Get function")
+            return
+
+    def Set(self, var_name, var_value):
+        try:
+            fcn = '[Set("{}", "{}")]'.format(var_name, var_value)
+            self._get_request(fcn)
+        except Exception as e:
+            print(e)
+            print("Exception in Set function")
             return
 
     def SayAs(self, before, data, content, after=""):
@@ -348,14 +389,60 @@ class Client(object):
         """
         try:
             fcn = '[SpeakExSysVolAsync("{}", "{}", "{}", "{}", "{}")]'.format(phrase, VoiceVolume, VoiceRate,
-                                                                      phraseDelay, VoiceName)
+                                                                              phraseDelay, VoiceName)
             self._get_request(fcn)
         except Exception as e:
             print(e)
             print("Exception in SpeakExSysVolAsync function")
             return
 
-    def check_for_input(self):
+    def _get_xml(self, var_name='Pytron'):
+        """ Checks xml file for incoming commands sent from links using the [Set("var", "value")] function
+        and returns them.
+
+        :param variable: Name of the variable in the UserVariable.xml file.
+        :return: Returns the value of the variable.
+        """
+        try:
+            self.variable = var_name
+            _path = self.path + r'\UserVariables.xml'
+            tree = ET.parse(_path)
+            root = tree.getroot()
+            response = False
+            for variable in root.findall('Variable'):
+                n = variable.find('Name').text
+                if n == var_name:
+                    v = variable.find('Value')
+                    t = v.text
+                    response = t
+            return response
+        except Exception as e:
+            print("Exception in _get_xml function")
+            print(e)
+            return
+
+    def _clear_xml(self, var_name='Pytron'):
+        """ Clears xml value with pythons standard xml library ET
+
+        :param var_name: Variable name in xml file
+        """
+        try:
+            _path = self.path + r'\UserVariables.xml'
+            tree = ET.parse(_path)
+            root = tree.getroot()
+            for variable in root.findall('Variable'):
+                n = variable.find('Name').text
+                if n == var_name:
+                    v = variable.find('Value')
+                    v.clear()
+            tree.write(_path)
+            return
+        except Exception as e:
+            print("Exception in _clear_xml function")
+            print(e)
+            return
+
+    def _check_for_input(self):
         """ Check dictation file for changes """
         with open(self.path + "\dictation.txt", 'r') as f:
             for line in f:
@@ -373,24 +460,8 @@ class Client(object):
         with open(self.path + '\dictation.txt', 'w+') as f:
             f.close()
 
-    def _write_history(self, text):
-        """ Appends history.txt with detected user input -private
-
-        :param text:
-        """
-        try:
-            secs = time.time()
-            time_stamp = datetime.datetime.fromtimestamp(secs).strftime('%Y-%m-%d %H:%M:%S')
-            history = "{}: {}".format(time_stamp, text)
-            with open(self.path + '\history.txt', 'a') as f:
-                f.write(history)
-                f.close()
-        except Exception as e:
-            print(e)
-            print("Exception in _write_history function")
-
     def _get_request(self, fcn):
-        """ Speak to Links with http request
+        """ Speak to Links with a get request using urllib
 
         :param fcn: The function call for Links ( must be a valid links function )
         """
@@ -409,6 +480,22 @@ class Client(object):
         except (TypeError, IOError, Exception):
             print("Exception in _get_request function")
             return
+
+    def _write_history(self, text):
+        """ Appends history.txt with detected user input -private
+
+        :param text:
+        """
+        try:
+            secs = time()
+            time_stamp = datetime.datetime.fromtimestamp(secs).strftime('%Y-%m-%d %H:%M:%S')
+            history = "{}: {}".format(time_stamp, text)
+            with open(self.path + '\history.txt', 'a') as f:
+                f.write(history)
+                f.close()
+        except Exception as e:
+            print(e)
+            print("Exception in _write_history function")
 
     @staticmethod
     def strip_non_ascii(string):
@@ -434,10 +521,11 @@ class Client(object):
         return a
 
 
-# if __name__ == '__main__':
-#     # PATH = r'C:\users\traBpUkciP\AppData\Roaming\LINKS\Customization\Scripts'
-#     # ai = Client(PATH)
-#     # ai.talk('test')
-#     # ai.emulate_speech('what time is it')
-#     print(APPDATA)
-
+if __name__ == '__main__':
+    ai = Client()
+    ai.talk('Hello')
+    test = ai.Get('Pytron')
+    print('1', test)
+    ai.Set('Pytron', 'This is a test')
+    test = ai.Get('Pytron')
+    print('2', test)
