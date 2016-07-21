@@ -145,6 +145,11 @@ Updates
 =======
 
 New features! -
+    Changelog- v.0.3.2
+    - Better error response handling in _get_request() ( uses ast standard library module )
+    - Optimized _get_xml() & _clear_xml() ( Thanks Zunair )
+    - Fixed Get() function  ( typo in url )
+
     Changelog- v.0.3.1
     - Added XML support for access to Links UserVariables.xml file
     - Added more function wrappers - [Get("")], [Set("", "")]
