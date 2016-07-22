@@ -17,11 +17,14 @@ Installation
 
 Simple:
 
+    install LINKS   ( http://mega-voice-command.com/ )
+    
     pip install pytronlinks --upgrade
 
-    install LINKS   ( http://mega-voice-command.com/ )
+    `Full command list <http://pythonhosted.org/pytronlinks/genindex.html>`_ 
+   
 
-
+    
 Example
 =======
 
