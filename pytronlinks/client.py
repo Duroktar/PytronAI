@@ -2,33 +2,11 @@
 
 """
     Pytron - The MVC Links Interface
-    ~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Links for Python. Interact with Links from your scripts!
 
      http://mega-voice-command.com/
-
-    :copyright: (c) 2016 by traBpUkciP.
-    :license: BSD, see LICENSE for more details.
-
-
-    Changelog- v.0.3.2
-    - Better error response handling in _get_request() ( uses ast standard library module )
-    - Optimized _get_xml() & _clear_xml() ( Thanks Zunair )
-    - Fixed Get() function  ( typo in url )
-
-
-    Changelog- v.0.3.1
-    - Added XML support for access to Links UserVariables.xml file
-    - Added more function wrappers - [Get("")], [Set("", "")]
-
-
-    Changelog- v.0.2.1
-    - Added APPDATA as default path to LINKS Install
-    - Added 'Loquendo by Nuance' function wrapper
-    - Added a bunch of other LINKS function as well ( check the README )
-    - Adding get json response verification ( Adding type of response as parameter )
-    - Added custom function parser
 
 """
 
@@ -41,9 +19,13 @@ import ast
 
 
 class Client(object):
-    """A Python client for the Mega Voice Command AI LINKS-MarkII
+    """ Main Pytron Client v.0.3.3
 
-         http://mega-voice-command.com/
+         :Example:
+
+              import pytronlinks
+
+               ai = pytronlinks.Client()
 
     """
 
@@ -243,6 +225,11 @@ class Client(object):
             return
 
     def Get(self, var_name):
+        """ Gets a variable saved in the '\LINKS\Customization\XML\UserVariables.xml' file.
+
+        :param var_name: Name of variable to get the value of
+        :return: Returns the value of the variable
+        """
         try:
             fcn = '[Get("{}")]'.format(var_name)
             self._get_request(fcn)
@@ -253,6 +240,11 @@ class Client(object):
             return
 
     def Set(self, var_name, var_value):
+        """ Sets a variable in the '\LINKS\Customization\XML\UserVariables.xml' file.
+
+        :param var_name: Name of variable
+        :param var_value: Value to set
+        """
         try:
             fcn = '[Set("{}", "{}")]'.format(var_name, var_value)
             self._get_request(fcn)
@@ -557,4 +549,35 @@ if __name__ == '__main__':
     ai.emulate_speech("what time is it")
     ai2 = Client(key='asdfasdf')
     ai2.talk('this is a false test')
-    # ai.listen()
+
+
+"""
+    Changelog- v.0.3.3
+    - PEP-8
+    - Added rest of Docstrings
+    - Creating initial documentation using Sphinx
+
+
+    Changelog- v.0.3.2
+    - Better error response handling in _get_request() ( uses ast standard library module )
+    - Optimized _get_xml() & _clear_xml() ( Thanks Zunair )
+    - Fixed Get() function  ( typo in url )
+
+
+    Changelog- v.0.3.1
+    - Added XML support for access to Links UserVariables.xml file
+    - Added more function wrappers - [Get("")], [Set("", "")]
+
+
+    Changelog- v.0.2.1
+    - Added APPDATA as default path to LINKS Install
+    - Added 'Loquendo by Nuance' function wrapper
+    - Added a bunch of other LINKS function as well ( check the README )
+    - Adding get json response verification ( Adding type of response as parameter )
+    - Added custom function parser
+
+
+
+    :copyright: (c) 2016 by traBpUkciP.
+    :license: BSD, see LICENSE for more details.
+"""
