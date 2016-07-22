@@ -152,25 +152,25 @@ Updates
 
 **New features!**
     **Changelog- v.0.3.3**
-    - PEP-8
-    - Added rest of Docstrings
-    - Created documentation using Sphinx
+      - PEP-8
+      - Added rest of Docstrings
+      - Created documentation using Sphinx
 
     **Changelog- v.0.3.2**
-    - Better error response handling in _get_request() ( uses ast standard library module )
-    - Optimized _get_xml() & _clear_xml() ( Thanks Zunair )
-    - Fixed Get() function  ( typo in url )
+      - Better error response handling in _get_request() ( uses ast standard library module )
+      - Optimized _get_xml() & _clear_xml() ( Thanks Zunair )
+      - Fixed Get() function  ( typo in url )
 
     **Changelog- v.0.3.1**
-    - Added XML support for access to Links UserVariables.xml file
-    - Added more function wrappers - [Get("")], [Set("", "")]
+      - Added XML support for access to Links UserVariables.xml file
+      - Added more function wrappers - [Get("")], [Set("", "")]
 
     **Changelog- v.0.2.1**
-    - Added APPDATA as default path to LINKS Install ( ai = pytronlinks.Client() )
-    - Added 'Loquendo by Nuance' function wrapper
-    - Added a bunch of other LINKS function as well ( check the README )
-    - Adding get json response verification ( Adding type of response as parameter )
-    - Added custom function parser
+      - Added APPDATA as default path to LINKS Install ( ai = pytronlinks.Client() )
+      - Added 'Loquendo by Nuance' function wrapper
+      - Added a bunch of other LINKS function as well ( check the README )
+      - Adding get json response verification ( Adding type of response as parameter )
+      - Added custom function parser
 
 
 
