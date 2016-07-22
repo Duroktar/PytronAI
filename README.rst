@@ -1,6 +1,6 @@
-=============
-pytron v0.3.3
-=============
+==========================================================
+Pytron: A Python library for the LINKS Mark II A.I. v0.3.3
+==========================================================
 
 Interface with your Links AI and send commands from within your Python scripts. Most of Links built in functions
 can be accessed by name with more being added all the time. If you have any requests feel free to let me know on github
