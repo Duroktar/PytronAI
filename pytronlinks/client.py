@@ -127,6 +127,34 @@ class Client(object):
         self._get_request(string)
         return
 
+    def GetConfirmation(self, trigger_var, timeout=10, conf_speech=False, speech_on_yes=False, speech_on_no=False):
+        try:
+            if not trigger_var:
+                print("Need to select a trigger variable.")
+                return
+            if timeout > 60:
+                timeout = 60
+                print("Timeout set to max: 60 seconds.")
+            if conf_speech:
+                self.talk(conf_speech)
+            for i in range(1, timeout):
+                response = self._get_xml(trigger_var)
+                if response == 'yes':
+                    if speech_on_yes:
+                        self.talk(speech_on_yes)
+                    return True
+                elif response == 'no':
+                    if speech_on_no:
+                        self.talk(speech_on_no)
+                    return False
+                else:
+                    sleep(1)
+                    # continue
+            print("Confirmation timed out")
+            return "Timed out"
+        except Exception as e:
+            print(e)
+
     # Checks for any value in the UserVariables.xml file and returns it input when found. ( BLOCKING )
     def listen(self, var_name='Pytron', freq=0.2):
         """ Check out the example to see how you could use this. This is probably the most powerful feature.
@@ -137,11 +165,15 @@ class Client(object):
 
 
             ** Make a command in links social tab like this **
-         Command: Links {speech=test_dictation}
-         Response: [Set("Pytron", {speech})]
-         Profile: Main
+        Command: Links {speech=test_dictation}
+        Response: [Set("Pytron", {speech})]
+        Profile: Main
 
-         And use the dictation in Pytron with the script below.. ( Ctrl-c to quit )
+        Command: {answer=confirmation_wordlist}
+        Response: [Set("Confirm", {{answer}})]
+        Profile: Main
+
+        And use the dictation in Pytron with the script below.. ( Ctrl-c to quit )
             v        v         v         v         v
 
         :Example:
@@ -151,11 +183,16 @@ class Client(object):
             ai = pytronlinks.Client()
 
             def main():
-                dictation = listen()
+                dictation = ai.listen()
                 if dictation:
-                    # ( do something with dictation )
-                    print(dictation)
-                    return
+                    pt = 'Confirm'
+                    confirm = ai.GetConfirmation('Did you say, {}', '{}', 12).format(dictation, pt)
+                    if confirm:
+                        check = ai.GetConfirmation('Are you sure?', '{}', 12, speech_on_yes='Ok').format(dictation, pt)
+                        if check:
+                            ai.emulate_speech(dictation)
+                            print(dictation)
+                            return
 
             try:
                 while True:
@@ -167,7 +204,8 @@ class Client(object):
             self._clear_xml(var_name)
             print("Awaiting commands")
             while True:
-                x = self._get_xml()
+                x = self._get_xml(var_name)
+                print(x)
                 if x:
                     answer = x
                     self._clear_xml(var_name)
@@ -221,11 +259,13 @@ class Client(object):
             self._get_request(fcn)
         except Exception as e:
             print(e)
-            print("Exception in LoqSpeak function")
+            print("Exception in Loquendo function."
+                  "It's quite possible that something happened."
+                  "Because it works fine on my computer..")
             return
 
     def Get(self, var_name):
-        """ Gets a variable saved in the '\LINKS\Customization\XML\UserVariables.xml' file.
+        """ Gets a variable saved in the '\\LINKS\\Customization\\XML\\UserVariables.xml' file.
 
         :param var_name: Name of variable to get the value of
         :return: Returns the value of the variable
@@ -236,7 +276,8 @@ class Client(object):
             return self._get_xml(var_name)
         except Exception as e:
             print(e)
-            print("Exception in Get function")
+            print("Exception in Get function."
+                  "Gonna need coffee for this one.")
             return
 
     def Set(self, var_name, var_value):
@@ -253,16 +294,36 @@ class Client(object):
             print("Exception in Set function")
             return
 
+    def GetWord(self, wordlist, grammar, column):
+        try:
+            fcn = '[GetWord("{}", "{}", "{}")]'.format(wordlist, grammar, column)
+            x = self._get_request(fcn)
+            return x
+        except Exception as e:
+            print(e)
+            print("Exception in Get Word function.")
+            return
+
+    def CallCommand(self, command):
+        try:
+            fcn = '[CallCommand("{}")]'.format(command)
+            self._get_request(fcn)
+        except Exception as e:
+            print(e)
+            print("Exception in Call Command function."
+                  "You got something on your shirt there.. /SLAP")
+            return
+
     def SayAs(self, before, data, content, after=""):
         """ This function is only for speech. Will speak the appropriate way for the given data type. ( See example )
 
         :param before: In the example, the before string is "The phone number is" ( can be blank )
         :param after: In the example, the after string is "how cool is that?" ( defaults to blank )
         :param data: Data to be spoken as
-        :param content: Data content type ( see https://msdn.microsoft.com/en-us/library/system.speech.synthesis.sayas(v=vs.110).aspx )
+        :param content: see https://msdn.microsoft.com/en-us/library/system.speech.synthesis.sayas(v=vs.110).aspx )
 
         Example:
-        http://localhost:54657/?action=[Speak(%22The%20phone%20number%20is%20[SayAs(%2218001239874%22,%22Telephone%22)]%22)]&key=ABC1234
+
             ai.SayAs(r"The phone number is","18001239874","Telephone","how cool is that?")
         """
         try:
@@ -325,7 +386,8 @@ class Client(object):
         :param sys_or_voice_vol: Use system wide volume or ai' set volume
         """
         try:
-            fcn = '[SpeakEx("{}", "{}", "{}", "{}", "{}", "{}")]'.format(phrase, name, vol, rate, delay, sys_or_voice_vol)
+            fcn = '[SpeakEx("{}", "{}", "{}", "{}", "{}", "{}")]'.format(phrase, name, vol, rate,
+                                                                         delay, sys_or_voice_vol)
             self._get_request(fcn)
         except Exception as e:
             print(e)
@@ -462,7 +524,7 @@ class Client(object):
         with open(self.path + '\dictation.txt', 'w+') as f:
             f.close()
 
-    def _get_request(self, fcn):
+    def _get_request(self, fcn, disable_recurse=False):
         """ Speak to Links with a get request using urllib
 
         :param fcn: The function call for Links ( must be a valid links function )
@@ -475,6 +537,7 @@ class Client(object):
             r = urllib.urlopen(url, context="'application/json")
             if r.code and r.code == 200:
                 x = r.readlines()[3]
+                print(x)
                 j = ast.literal_eval(x)
                 err = (j['error'])
                 if len(err) > 0:
@@ -489,12 +552,15 @@ class Client(object):
                     return
             elif r.code:
                 print('Error {}'.format(r.code))
+                return
             else:
                 print("Something went terribly wrong.....")
+                return
         except Exception as e:
-            print("***Exception in _get_request function. Check your ip, port and key settings!***")
-            print("Also your shoes are untied..")
-            print("Exception: " + str(e))
+            print(e)
+            print("Exception in _get_request function. \n"
+                  "***Check your ip, port and key settings!*** \n"
+                  "Also, your shoes are untied..")
             return
 
     def _write_history(self, text):
@@ -539,16 +605,25 @@ class Client(object):
 
 if __name__ == '__main__':
     ai = Client()
-    ai.talk('Hello')
-    ai.Set('Pytron', 'This is the first test')
-    test = ai.Get('Pytron')
-    ai.talk(test)
-    ai.Set('Pytron', 'This is the second test')
-    test = ai.Get('Pytron')
-    ai.talk(test)
-    ai.emulate_speech("what time is it")
-    ai2 = Client(key='asdfasdf')
-    ai2.talk('this is a false test')
+    # ai.talk('Hello')
+    # ai.Set('Pytron', 'This is the first test')
+    # test = ai.Get('Pytron')
+    # ai.talk(test)
+    # ai.Set('Pytron', 'This is the second test')
+    # test = ai.Get('Pytron')
+    # ai.talk(test)
+    # ai.emulate_speech("what time is it")
+    dictation = ai.listen()
+    if dictation:
+        conf_var = 'confirm'
+        confirm = ai.GetConfirmation('Did you say, {}', '{}', 12).format(dictation, conf_var)
+        if confirm:
+            check = ai.GetConfirmation('Are you sure?', '{}', 12, speech_on_yes='Ok').format(conf_var)
+            if check:
+                ai.emulate_speech(dictation)
+                print(dictation)
+
+
 
 
 """
