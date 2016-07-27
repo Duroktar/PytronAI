@@ -205,7 +205,6 @@ class Client(object):
             print("Listening..")
             while True:
                 x = self._get_xml(var_name)
-                print(x)
                 if x:
                     answer = x
                     self._clear_xml(var_name)
