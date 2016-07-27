@@ -202,7 +202,7 @@ class Client(object):
         """
         try:
             self._clear_xml(var_name)
-            print("Awaiting commands")
+            print("Listening..")
             while True:
                 x = self._get_xml(var_name)
                 print(x)
@@ -627,6 +627,11 @@ if __name__ == '__main__':
 
 
 """
+    Changelog- v.0.3.4
+    - Fixed Listen() function
+    - Added more functions ( No docstrings yet, tsk tsk traBpUkciP)
+
+
     Changelog- v.0.3.3
     - PEP-8
     - Added rest of Docstrings
