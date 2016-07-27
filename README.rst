@@ -1,27 +1,32 @@
-=============
-pytron v0.3.3
-=============
+==========================================================
+Pytron: A Python library for the LINKS Mark II A.I. v0.3.3
+==========================================================
 
 Interface with your Links AI and send commands from within your Python scripts. Most of Links built in functions
 can be accessed by name with more being added all the time. If you have any requests feel free to let me know on github
 under issues. You can report bugs there as well. Have fun!
 Thanks!
 
+**Changelog at bottom of page under Updates**
+
   Links: ( Free Windows AI Software )
   http://mega-voice-command.com/
 
-  ** Changelog at bottom of page under Updates **
+  
 
 Installation
 ============
 
 Simple:
 
+    install LINKS   ( http://mega-voice-command.com/ )
+    
     pip install pytronlinks --upgrade
 
-    install LINKS   ( http://mega-voice-command.com/ )
+    `Full command list <http://pythonhosted.org/pytronlinks/genindex.html>`_ 
+   
 
-
+    
 Example
 =======
 
@@ -147,25 +152,25 @@ Updates
 
 **New features!**
     **Changelog- v.0.3.3**
-    - PEP-8
-    - Added rest of Docstrings
-    - Created documentation using Sphinx
+      - PEP-8
+      - Added rest of Docstrings
+      - Created documentation using Sphinx
 
     **Changelog- v.0.3.2**
-    - Better error response handling in _get_request() ( uses ast standard library module )
-    - Optimized _get_xml() & _clear_xml() ( Thanks Zunair )
-    - Fixed Get() function  ( typo in url )
+      - Better error response handling in _get_request() ( uses ast standard library module )
+      - Optimized _get_xml() & _clear_xml() ( Thanks Zunair )
+      - Fixed Get() function  ( typo in url )
 
     **Changelog- v.0.3.1**
-    - Added XML support for access to Links UserVariables.xml file
-    - Added more function wrappers - [Get("")], [Set("", "")]
+      - Added XML support for access to Links UserVariables.xml file
+      - Added more function wrappers - [Get("")], [Set("", "")]
 
     **Changelog- v.0.2.1**
-    - Added APPDATA as default path to LINKS Install ( ai = pytronlinks.Client() )
-    - Added 'Loquendo by Nuance' function wrapper
-    - Added a bunch of other LINKS function as well ( check the README )
-    - Adding get json response verification ( Adding type of response as parameter )
-    - Added custom function parser
+      - Added APPDATA as default path to LINKS Install ( ai = pytronlinks.Client() )
+      - Added 'Loquendo by Nuance' function wrapper
+      - Added a bunch of other LINKS function as well ( check the README )
+      - Adding get json response verification ( Adding type of response as parameter )
+      - Added custom function parser
 
 
 
