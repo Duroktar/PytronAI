@@ -1,5 +1,5 @@
 ==========================================================
-Pytron: A Python library for the LINKS Mark II A.I. v0.3.3
+Pytron: A Python library for the LINKS Mark II A.I. v0.3.5
 ==========================================================
 
 Interface with your Links AI and send commands from within your Python scripts. Most of Links built in functions
@@ -151,6 +151,10 @@ Updates
 =======
 
 **New features!**
+    **Changelog- v.0.3.5**
+    - Fixed Listen() function
+    - Added more functions ( No docstrings yet, tsk tsk traBpUkciP)
+
     **Changelog- v.0.3.3**
       - PEP-8
       - Added rest of Docstrings
