@@ -6,9 +6,6 @@ Interface with your Links AI and send commands from within your Python scripts. 
 from any computer you want! Most of Links built in functions can be accessed by name with more being added all the time.
 If you have any requests feel free to let me know on github under issues. You can report bugs there as well. Have fun!
 
-  Thanks!
-
-
   **Links: ( Free Windows AI Software )**
   http://mega-voice-command.com/
 
