@@ -115,7 +115,8 @@ Returns a list of all callable commands.
 Get confirmation
 ================
 
-Get confirmation before executing commands. Additional parameters not shown in example -
+Get confirmation before executing commands. Additional parameters not shown in example.
+
         :param trigger_var: Variable in UserVariable.xml to be used for Confirmation ( Default Variable used: "Answer" )
         :param confirm: Confirmation speech ( Ex: "Are you sure you want to play music?" )
         :param on_yes: Speech response if answer is "yes"
