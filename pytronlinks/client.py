@@ -8,18 +8,21 @@
 
      http://mega-voice-command.com/
 
+
+    :copyright: (c) 2016 by Scott Doucet / aka: traBpUkciP
+    :license: BSD, see LICENSE for more details.
 """
 
 import os
 from time import sleep, time
 import datetime
-import urllib
 import xml.etree.ElementTree as ET
 import ast
+import requests
 
 
 class Client(object):
-    """ Main Pytron Client v.0.3.3
+    """ Main Pytron Client v.0.3.6
 
          :Example:
 
@@ -71,7 +74,7 @@ class Client(object):
             import pytronlinks
 
 
-            ai = pytronlinks.Client(PATH)
+            ai = pytronlinks.Client()
             ai.talk("Links is the best!")
 
         """
@@ -83,7 +86,7 @@ class Client(object):
             return
 
     def emulate_speech(self, command):
-        """ Sends an Emulate Speech Command
+        """ Sends an Emulate Speech Command -
 
         :param command: This is the speech for the command you want to emulate
 
@@ -109,8 +112,10 @@ class Client(object):
             return
 
     def custom(self, string):
-        """ Insert your own Links Action Commands.
-                Anything you can put in Links *Action* bar, you can put in here! See example.
+        """ Insert your own Links Action Commands -
+                Anything you can put in Links *Action* bar, you can put in here!
+                This would be useful for new testing new Links functions that haven't
+                made it to here yet. See example.
 
         :param string: See example..
 
@@ -127,7 +132,16 @@ class Client(object):
         self._get_request(string)
         return
 
-    def GetConfirmation(self, trigger_var, timeout=10, conf_speech=False, speech_on_yes=False, speech_on_no=False):
+    def GetConfirmation(self, trigger_var='Answer', confirm=None, on_yes=None, on_no=None, timeout=10):
+        """
+
+        :param trigger_var:
+        :param confirm:
+        :param on_yes:
+        :param on_no:
+        :param timeout:
+        :return:
+        """
         try:
             if not trigger_var:
                 print("Need to select a trigger variable.")
@@ -135,25 +149,26 @@ class Client(object):
             if timeout > 60:
                 timeout = 60
                 print("Timeout set to max: 60 seconds.")
-            if conf_speech:
-                self.talk(conf_speech)
+            if confirm:
+                self.talk(confirm)
             for i in range(1, timeout):
                 response = self._get_xml(trigger_var)
                 if response == 'yes':
-                    if speech_on_yes:
-                        self.talk(speech_on_yes)
+                    if on_yes:
+                        self.talk(on_yes)
                     return True
                 elif response == 'no':
-                    if speech_on_no:
-                        self.talk(speech_on_no)
+                    if on_no:
+                        self.talk(on_no)
                     return False
                 else:
                     sleep(1)
                     # continue
             print("Confirmation timed out")
-            return "Timed out"
+            return False
         except Exception as e:
             print(e)
+            return False
 
     # Checks for any value in the UserVariables.xml file and returns it input when found. ( BLOCKING )
     def listen(self, var_name='Pytron', freq=0.2):
@@ -169,7 +184,7 @@ class Client(object):
         Response: [Set("Pytron", {speech})]
         Profile: Main
 
-        Command: {answer=confirmation_wordlist}
+        Command: {answer=Answer}
         Response: [Set("Confirm", {{answer}})]
         Profile: Main
 
@@ -183,16 +198,20 @@ class Client(object):
             ai = pytronlinks.Client()
 
             def main():
+
                 dictation = ai.listen()
-                if dictation:
-                    pt = 'Confirm'
-                    confirm = ai.GetConfirmation('Did you say, {}', '{}', 12).format(dictation, pt)
-                    if confirm:
-                        check = ai.GetConfirmation('Are you sure?', '{}', 12, speech_on_yes='Ok').format(dictation, pt)
-                        if check:
-                            ai.emulate_speech(dictation)
-                            print(dictation)
-                            return
+                if not dictation:
+                    break
+
+                confirm = ai.GetConfirmation(confirm='Did you say - {}?').format(dictation)
+                if not confirm:
+                    break
+
+                results = some_crazy_function(dictation)
+                if not results:
+                    break
+
+                ai.talk(results)
 
             try:
                 while True:
@@ -294,6 +313,13 @@ class Client(object):
             return
 
     def GetWord(self, wordlist, grammar, column):
+        """ Returns wordlist items by grammar (line) and column name
+
+        :param wordlist: File name of wordlist ( file type not needed )
+        :param grammar: Basically the line index. ( ie: first column )
+        :param column: Column to return value from ( name or index )
+        :return: Returns True or False
+        """
         try:
             fcn = '[GetWord("{}", "{}", "{}")]'.format(wordlist, grammar, column)
             x = self._get_request(fcn)
@@ -304,14 +330,90 @@ class Client(object):
             return
 
     def CallCommand(self, command):
+        """ Calls any non-dynamic commands and returns the response from links
+        :param command: Any command that doesn't contain a wordlist or function
+        :return: Returns the response from Links as a string
+
+        """
         try:
             fcn = '[CallCommand("{}")]'.format(command)
-            self._get_request(fcn)
+            result = self._get_request(fcn)
+            return result
         except Exception as e:
             print(e)
             print("Exception in Call Command function."
                   "You got something on your shirt there.. /SLAP")
             return
+
+    def GetGrammarList(self, data_type="XML"):
+        """ Returns a list of all callable commands. Use with write_commands_to_file to create a file containing
+        all the available grammars to use as a reference.
+
+        :param data_type:
+        :return:
+        """
+        try:
+            ip = self.ip
+            port = self.port
+            key = self.key
+            d_type = data_type
+
+            action = '?action=[GetGrammarList("{}")]'.format(d_type).upper()
+            output = '&output={}'.format(d_type).lower()
+            request = '&request=disable_recurse'
+            url = 'http://{}:{}/{}{}{}&key={}'.format(ip, port, action, output, request, key)
+
+            r = requests.get(url)
+            x = list(r.iter_lines())
+            root_ = ET.fromstringlist(x[4:])
+            response = root_.find('response')
+            xml = self.strip_non_ascii(response.text)
+            gram = ET.fromstring(xml.encode('utf-16-be'))
+            grammars = gram.findall('grammar')
+            return_list = []
+
+            for i in grammars:
+                section = i.find('Name')
+                commands = i.findall('Commands')
+                enabled = i.find('Enabled')
+                loaded = i.find('Loaded')
+                DebugShowPhrases = i.find('DebugShowPhrases')
+                priority = i.find('Priority')
+                name = section.text
+                name_len = len(name)
+                underscore = "=" * name_len
+
+                if str(enabled.text) == 'true':
+                    enabled = "Enabled"
+                    # print enabled
+                else:
+                    enabled = "Disabled"
+                    # print enabled
+
+                if str(loaded.text) == 'true':
+                    loaded = "Loaded"
+                    # print loaded
+                else:
+                    loaded = "Not loaded"
+                    # print loaded
+                enabled = "*" + enabled + "*"
+                loaded = "*" + loaded + "*"
+                return_list.append(name)
+                return_list.append(underscore)
+                return_list.append(enabled)
+                return_list.append(loaded)
+                return_list.append('\n')
+                for each in commands:
+                    return_list.append(each.text)
+
+                return_list.append('\n \n')
+
+            return return_list
+        except Exception as e:
+            print(e)
+            print("Exception in Get Grammar List function.")
+            return False
+
 
     def SayAs(self, before, data, content, after=""):
         """ This function is only for speech. Will speak the appropriate way for the given data type. ( See example )
@@ -523,7 +625,7 @@ class Client(object):
         with open(self.path + '\dictation.txt', 'w+') as f:
             f.close()
 
-    def _get_request(self, fcn, disable_recurse=False):
+    def _get_request(self, fcn):
         """ Speak to Links with a get request using urllib
 
         :param fcn: The function call for Links ( must be a valid links function )
@@ -532,35 +634,38 @@ class Client(object):
             ip = self.ip
             port = self.port
             key = self.key
-            url = 'http://{}:{}/?action={}&key={}&request=enable&output=json'.format(ip, port, fcn, key)
-            r = urllib.urlopen(url, context="'application/json")
-            if r.code and r.code == 200:
-                x = r.readlines()[3]
-                print(x)
+            url = 'http://{}:{}/?action={}&key={}&output=json'.format(ip, port, fcn, key)
+            r = requests.get(url)
+            if r.status_code and r.status_code == 200:
+                x = list(r.iter_lines())[3]
                 j = ast.literal_eval(x)
+                # print(j)
+                result = j['response']
+                # print result
                 err = (j['error'])
                 if len(err) > 0:
                     print("v" * 20)
-                    res = (j['response'])
-                    z = err + "\n" + res
+                    z = err + "\n" + result
                     print(z)
                     print("^" * 20)
                     print("\n")
                     return False
                 else:
-                    return
-            elif r.code:
-                print('Error {}'.format(r.code))
-                return
+                    # print(result)
+                    return result
+            elif r.status_code:
+                err = 'Error {}'.format(r.status_code)
+                print(err)
+                return err
             else:
                 print("Something went terribly wrong.....")
-                return
+                return False
         except Exception as e:
             print(e)
             print("Exception in _get_request function. \n"
                   "***Check your ip, port and key settings!*** \n"
                   "Also, your shoes are untied..")
-            return
+            return False
 
     def _write_history(self, text):
         """ Appends history.txt with detected user input -private
@@ -577,6 +682,22 @@ class Client(object):
         except Exception as e:
             print(e)
             print("Exception in _write_history function")
+
+    def write_commands_to_file(self, commands):
+        """ Writes a list of commands to a file in rst format.
+
+        :param commands: List of commands returned bt GetGrammarList function
+        :return: Returns True or Exceptions
+        """
+        try:
+            data = commands
+            print type(data)
+            with open(self._SCRIPTS_PATH + r'\command_list.txt', 'w') as f:
+                f.writelines(data)
+                f.close()
+                return True
+        except Exception as e:
+            return e
 
     @staticmethod
     def strip_non_ascii(string):
@@ -602,30 +723,48 @@ class Client(object):
         return a
 
 
+# Used for testing
 if __name__ == '__main__':
     ai = Client()
-    # ai.talk('Hello')
+    ai.talk('Hello')
+    # print(ai.GetWord("test_greetings", "hello", "converted value"))
+    # print(ai.GetWord("RSSFeeds", "CNN", "url"))
+    # print(ai.GetWord("RSSFeeds", "New York Times", "url"))
     # ai.Set('Pytron', 'This is the first test')
     # test = ai.Get('Pytron')
+    # print("This is the first test: ", test)
     # ai.talk(test)
     # ai.Set('Pytron', 'This is the second test')
     # test = ai.Get('Pytron')
+    # print("This is the second test: ", test)
     # ai.talk(test)
-    # ai.emulate_speech("what time is it")
-    dictation = ai.listen()
-    if dictation:
-        conf_var = 'confirm'
-        confirm = ai.GetConfirmation('Did you say, {}', '{}', 12).format(dictation, conf_var)
-        if confirm:
-            check = ai.GetConfirmation('Are you sure?', '{}', 12, speech_on_yes='Ok').format(conf_var)
-            if check:
-                ai.emulate_speech(dictation)
-                print(dictation)
-
-
+    # temp = ai.CallCommand("whats the temperature")
+    # print(temp)
+    # test = ai.CallCommand("Greetings")
+    # print test
+    # ai.emulate_speech("open windows explorer")
+    # print(ai.CallCommand("what time is it"))
+    # confirm = ai.GetConfirmation(confirm='Say yes or no to continue', on_yes="You said yes", on_no="You said no")
+    # if confirm:
+    #     print("WORKS!")
+    # if not confirm:
+    #     print("NOT CONFIRM!")
+    # if confirm is None:
+    #     print("CONFIRM IS NONE!")
+    # print("Confirm :", confirm)
+    # x = ai.GetGrammarList()
+    # ai.write_commands_to_file(x)
 
 
 """
+    Changelog- v.0.3.6
+    - Tweaked CallCommand function. Now returns the response from Links.
+    - Docstrings added for new functions
+    - Shelved urllib in exchange for the Requests library
+    - Add GetGrammarList function
+    - write_commands_to_file function added ( Needs de-bugging )
+
+
     Changelog- v.0.3.5
     - Fixed Listen() function
     - Added more functions ( No docstrings yet, tsk tsk traBpUkciP)
@@ -657,6 +796,6 @@ if __name__ == '__main__':
 
 
 
-    :copyright: (c) 2016 by traBpUkciP.
+    :copyright: (c) 2016 by Scott Doucet / aka: traBpUkciP.
     :license: BSD, see LICENSE for more details.
 """

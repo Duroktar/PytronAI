@@ -6,7 +6,7 @@
 
     Links for Python
 
-    :copyright: (c) 2016 by traBpUkciP.
+    :copyright: (c) 2016 by Scott Doucet / aka: traBpUkciP.
     :license: BSD, see LICENSE for more details.
 """
 
@@ -15,7 +15,7 @@ from .client import *
 
 
 __copyright__ = 'Copyright 2016 by traBpUkciP'
-__version__ = '0.3.5'
+__version__ = '0.3.6'
 __license__ = 'BSD'
 __author__ = 'traBpUkciP'
 __email__ = 'duroktar@gmail.com'

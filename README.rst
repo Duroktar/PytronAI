@@ -1,18 +1,18 @@
 ==========================================================
-Pytron: A Python library for the LINKS Mark II A.I. v0.3.5
+Pytron: A Python library for the LINKS Mark II A.I. v0.3.6
 ==========================================================
 
-Interface with your Links AI and send commands from within your Python scripts. Most of Links built in functions
-can be accessed by name with more being added all the time. If you have any requests feel free to let me know on github
-under issues. You can report bugs there as well. Have fun!
-Thanks!
+Interface with your Links AI and send commands from within your Python scripts. Send requests through Links Web Service
+from any computer you want! Most of Links built in functions can be accessed by name with more being added all the time.
+If you have any requests feel free to let me know on github under issues. You can report bugs there as well. Have fun!
 
-**Changelog at bottom of page**
+  Thanks!
 
-  Links: ( Free Windows AI Software )
+
+  **Links: ( Free Windows AI Software )**
   http://mega-voice-command.com/
 
-  
+-Changelog at bottom of page under Updates-
 
 Installation
 ============
@@ -32,9 +32,9 @@ Example
 
 .. code-block:: python
 
-    import pytronlinks
+    import pytronlinks as Pytron
 
-    ai = pytronlinks.Client()
+    AI = Pytron.Client()
 
       """
       Optional client parameters-
@@ -45,7 +45,7 @@ Example
         path: If you installed links in a different location,
                      point this to the Scripts folder( MUST BE RAW ) ie: (r'PATH')
 
-      ex: ai = pytronlinks.Client(path='C:\\temp', ip='192.0.0.16', key='KEY123')
+      ex: AI = Pytron.Client(path='C:\\temp', ip='192.0.0.16', key='KEY123')
       """
 
 
@@ -54,29 +54,30 @@ Make Links speak!
 
 .. code-block:: python
 
-    import pytronlinks
+    import pytronlinks as Pytron
 
     
     TEXT = ('MVC Rocks!')
 
-    ai = pytronlinks.Client()
-    ai.talk(TEXT)
+    AI = Pytron.Client()
+    AI.talk(TEXT)
 
 
 Emulate speech to Links
 =======================
 
+Will call the command as if you had spoken to links directly.
+
 .. code-block:: python
 
-    import pytronlinks
+    import pytronlinks as Pytron
 
     
     TEXT = ('what is the weather like')
 
-    ai = pytronlinks.Client()
-    ai.emulate_speech(TEXT)
-
-        Will call the command as if you had spoken to links directly
+    AI = Pytron.Client()
+    AI.emulate_speech(TEXT)
+    AI.emulate_speech("stop talking")
 
 
 Run custom action command
@@ -86,17 +87,65 @@ Run custom action command
 
 .. code-block:: python
 
-    import pytronlinks
+    import pytronlinks as Pytron
 
 
-    ai = pytronlinks.Client()
+    AI = Pytron.Client()
 
-    ai.custom(r'[Set("Last Subject", "pytron is the coolest")]')
-    ai.custom(r'[Speak("[Get("Last Subject")]")]')
+    AI.custom(r'[Set("Last Subject", "pytron is the coolest")]')
+    AI.custom(r'[Speak("[Get("Last Subject")]")]')
+
+
+Get a list of all available commands
+====================================
+
+Returns a list of all callable commands.
+
+*Coming soon*
+'Use with write_commands_to_file to create a file containing all the available grammars to use as a reference.'
+
+.. code-block:: python
+
+    import pytronlinks as Pytron
+
+    AI = Pytron.Client()
+
+    grammars = AI.GetGrammarList()
+    for commands in grammars:
+        print commands
+
+
+Get confirmation
+================
+
+Get confirmation before executing commands. Additional parameters not shown in example -
+        :param trigger_var: Variable in UserVariable.xml to be used for Confirmation ( Default Variable used: "Answer" )
+        :param confirm: Confirmation speech ( Ex: "Are you sure you want to play music?" )
+        :param on_yes: Speech response if answer is "yes"
+        :param on_no: Speech response if answer is "no"
+
+.. code-block:: python
+
+    import pytronlinks as Pytron  # Import Pytron
+
+
+    AI = Pytron.Client()
+    query = AI.listen('Pytron')  # Stars listening for input from Links
+
+    if query == 'quit':
+        break
+
+    if query == "Play music":
+        # Get confirmation returns True or False so it can be checked directly, like this..
+        if AI.GetConfirmation(confirm="Do you want to play music?"):
+            AI.emulate_speech('play music')
 
 
 Put script into listen mode
 ===========================
+
+Listens for user input by watching a variable in the UserVariables.xml file ( 'Pytron' by default ). The variable is
+set using the [Set("variable", "value")] command in links. **See Example**
 
 .. code-block:: python
 
@@ -110,16 +159,16 @@ Put script into listen mode
          And use the dictation in Pytron with the script below.. ( Ctrl-c to quit )
     """
 
-    import pytronlinks
+    import pytronlinks as Pytron
 
-    ai = pytronlinks.Client()
+    AI = Pytron.Client()
 
     def main():
-        dictation = ai.listen()
-        if dictation:
-            # ( do something with dictation )
-            ai.talk(dictation)
-            return
+        dictation = AI.listen()
+        if dictation == 'quit':
+            break
+        else:
+            AI.talk(dictation)
 
     try:
         while True:
@@ -142,15 +191,21 @@ Sends a 'Loquendo by Nuance' speech command ( requires Nuance Loquendo voices )
 
 .. code-block:: python
 
-    import pytronlinks
+    import pytronlinks as Pytron
 
-    ai = pytronlinks.Client()
     ai.LoqSpeak("I am an example","100","50","Simon")]
     
 Updates
 =======
 
 **New features!**
+    **Changelog- v.0.3.6**
+    - Tweaked CallCommand function. Now returns the response from Links.
+    - Docstrings added for new functions
+    - Shelved urllib in exchange for the Requests library
+    - Add GetGrammarList function
+    - write_commands_to_file function added ( Needs de-bugging )
+
     **Changelog- v.0.3.5**
     - Fixed Listen() function
     - Added more functions ( No docstrings yet, tsk tsk traBpUkciP)
@@ -181,4 +236,4 @@ Updates
 Authors
 =======
 
-traBpUkciP / `<https://github.com/Duroktar/>`__
+Scott Doucet / aka: traBpUkciP / aka: Duroktar / `<https://github.com/Duroktar/>`__

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Setup script for "Pytron-links" Links-Api
+Setup script for "Pytron" Links-Api
  http://mega-voice-command.com/
 """
 
@@ -71,6 +71,6 @@ setup(
     packages=find_packages(),
     url=source,
     version=version,
-    zip_safe=True,
+    zip_safe=True, requires=['requests']
 )
 
