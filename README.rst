@@ -7,7 +7,7 @@ can be accessed by name with more being added all the time. If you have any requ
 under issues. You can report bugs there as well. Have fun!
 Thanks!
 
-**Changelog at bottom of page under Updates**
+**Changelog at bottom of page**
 
   Links: ( Free Windows AI Software )
   http://mega-voice-command.com/
