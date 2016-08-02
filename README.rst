@@ -198,15 +198,15 @@ Updates
 
 **New features!**
     **Changelog- v.0.3.6**
-    - Tweaked CallCommand function. Now returns the response from Links.
-    - Docstrings added for new functions
-    - Shelved urllib in exchange for the Requests library
-    - Add GetGrammarList function
-    - write_commands_to_file function added ( Needs de-bugging )
+      - Tweaked CallCommand function. Now returns the response from Links.
+      - Docstrings added for new functions
+      - Shelved urllib in exchange for the Requests library
+      - Add GetGrammarList function
+      - write_commands_to_file function added ( Needs de-bugging )
 
     **Changelog- v.0.3.5**
-    - Fixed Listen() function
-    - Added more functions ( No docstrings yet, tsk tsk traBpUkciP)
+      - Fixed Listen() function
+      - Added more functions ( No docstrings yet, tsk tsk traBpUkciP)
 
     **Changelog- v.0.3.3**
       - PEP-8
