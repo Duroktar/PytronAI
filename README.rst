@@ -80,7 +80,7 @@ Will call the command as if you had spoken to links directly.
 Run custom action command
 =========================
 
- Anything you can put in Links *Action* bar, you can put in here! See example.
+Anything you can put in Links *Action* bar, you can put in here! See example.
 
 .. code-block:: python
 
