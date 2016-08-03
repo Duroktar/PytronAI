@@ -3,46 +3,6 @@ Default Command List for Links Mark II
 ======================================
 
 
-Volume Settings Grammar
-=======================
-*Enabled*
-*Loaded*
-
-
- - None
-
-
-
-Profiles Grammar
-================
-*Enabled*
-*Loaded*
-
-
- - None
-
-
-
-Search Grammar
-==============
-*Enabled*
-*Loaded*
-
-
- - None
-
-
-
-Move Window Grammar
-===================
-*Enabled*
-*Loaded*
-
-
- - None
-
-
-
 Close Application Grammar
 =========================
 *Disabled*
@@ -67,16 +27,6 @@ Close Application Grammar
  - wait wait wait
  - hold on a second
  - sorry my bad
-
-
-
-Multimedia Player Grammar
-=========================
-*Enabled*
-*Loaded*
-
-
- - None
 
 
 
@@ -308,4 +258,55 @@ Keyboard Grammar
  - print this please
  - minimize this please
  - maximize this please
+
+
+
+Volume Settings Grammar
+=======================
+*Enabled*
+*Loaded*
+
+
+ - None
+
+
+
+Profiles Grammar
+================
+*Enabled*
+*Loaded*
+
+
+ - None
+
+
+
+Search Grammar
+==============
+*Enabled*
+*Loaded*
+
+
+ - None
+
+
+
+Move Window Grammar
+===================
+*Enabled*
+*Loaded*
+
+
+ - None
+
+
+
+Multimedia Player Grammar
+=========================
+*Enabled*
+*Loaded*
+
+
+ - None
+
 
