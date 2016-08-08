@@ -22,7 +22,7 @@ import requests
 
 
 class Client(object):
-    """ Main Pytron Client v.0.3.6
+    """ Main Pytron Client v.0.3.7
 
          :Example:
 
@@ -42,10 +42,7 @@ class Client(object):
         :param port: Port that links is listening on
         :param key: Links web key
         :param ip: ip of computer with links
-        :param path: If you installed links in a different location,
-                     point this to the Scripts folder( MUST BE RAW ) ie: (r'PATH')
-
-          ex: ai = pytronlinks.Client(path=r'C:\temp', ip='176.0.0.16', key='NeWkEy123')
+        :param path: If you installed links in a different location
 
         :Example:
 
@@ -54,15 +51,12 @@ class Client(object):
             ai = pytronlinks.Client()
 
         """
-        try:
-            self.path = path
-            self.ip = ip
-            self.port = port
-            self.key = key
-            self._clear_input()
-        except Exception as e:
-            print(e)
-            print("It's not the end of the world.. But it's close. Try harder next time.")
+
+        self.path = path
+        self.ip = ip
+        self.port = port
+        self.key = key
+
 
     def talk(self, text):
         """ Speaks through Links
@@ -757,6 +751,10 @@ if __name__ == '__main__':
 
 
 """
+    Changelog- v.0.3.7
+    - Fixed error on Client initialization
+
+
     Changelog- v.0.3.6
     - Tweaked CallCommand function. Now returns the response from Links.
     - Docstrings added for new functions

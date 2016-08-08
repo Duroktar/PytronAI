@@ -1,5 +1,5 @@
 ==========================================================
-Pytron: A Python library for the LINKS Mark II A.I. v0.3.6
+Pytron: A Python library for the LINKS Mark II A.I. v0.3.7
 ==========================================================
 
 Interface with your Links AI and send commands from within your Python scripts. Send requests through Links Web Service
@@ -27,23 +27,20 @@ Simple:
 Example
 =======
 
+Initialize main Client with default or custom parameters.
+
+        :param port: Port that links is listening on.
+        :param key: Links web key.
+        :param ip: ip of computer with links.
+        :param path: If you installed links in a different location.
+
+    Example:
+
 .. code-block:: python
 
     import pytronlinks as Pytron
 
     AI = Pytron.Client()
-
-      """
-      Optional client parameters-
-
-        port: Port that links is listening on
-        key: Links web key
-        ip: ip of computer with links
-        path: If you installed links in a different location,
-                     point this to the Scripts folder( MUST BE RAW ) ie: (r'PATH')
-
-      ex: AI = Pytron.Client(path='C:\\temp', ip='192.0.0.16', key='KEY123')
-      """
 
 
 Make Links speak!
@@ -197,8 +194,12 @@ Updates
 =======
 
 **New features!**
+    **Changelog- v.0.3.7**
+      - Fixed error on Client initialization
+      - Cleaned up readme a bit
+
     **Changelog- v.0.3.6**
-      - Tweaked CallCommand function. Now returns the response from Links.
+      - Tweaked CallCommand function. Now returns the response from Links
       - Docstrings added for new functions
       - Shelved urllib in exchange for the Requests library
       - Add GetGrammarList function
