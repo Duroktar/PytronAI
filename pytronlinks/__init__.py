@@ -15,11 +15,11 @@ from .client import *
 
 
 __copyright__ = 'Copyright 2016 by traBpUkciP'
-__version__ = '0.3.7'
+__version__ = '0.3.8'
 __license__ = 'BSD'
 __author__ = 'traBpUkciP'
 __email__ = 'duroktar@gmail.com'
-__source__ = 'https://github.com/Duroktar/Links-AI-Interface/'
+__source__ = 'https://github.com/Duroktar/PytronAI/'
 
 __all__ = [
     'Client',

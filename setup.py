@@ -67,6 +67,5 @@ setup(
     url=source,
     version=version,
     zip_safe=True,
-    requires=['requests']
 )
 

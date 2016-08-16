@@ -18,11 +18,11 @@ from time import sleep, time
 import datetime
 import xml.etree.ElementTree as ET
 import ast
-import requests
+import urllib
 
 
 class Client(object):
-    """ Main Pytron Client v.0.3.7
+    """ Main Pytron Client v.0.3.8
 
          :Example:
 
@@ -31,18 +31,23 @@ class Client(object):
                ai = pytronlinks.Client()
 
     """
+    _APPDATA = None
+    _SCRIPTS_PATH = None
+    _XML_PATH = None
+    try:
+            _APPDATA = os.getenv(r'APPDATA')
+            _SCRIPTS_PATH = _APPDATA + r'\LINKS\Customization\Scripts'
+            _XML_PATH = _APPDATA + r'\LINKS\Customization\XML'
+    except Exception as e:
+        print "Linux box probably.. Path not needed."
 
-    _APPDATA = os.getenv(r'APPDATA')
-    _SCRIPTS_PATH = _APPDATA + r'\LINKS\Customization\Scripts'
-    _XML_PATH = _APPDATA + r'\LINKS\Customization\XML'
-
-    def __init__(self, path=_XML_PATH, port='54657', key='ABC1234', ip='localhost'):
+    def __init__(self, path=None, port='54657', key='ABC1234', ip='localhost'):
         """ Initialize Client, either with custom parameters or the common default values
 
         :param port: Port that links is listening on
         :param key: Links web key
         :param ip: ip of computer with links
-        :param path: If you installed links in a different location
+        :param path: Path to \LINKS\Customization\XML
 
         :Example:
 
@@ -52,7 +57,10 @@ class Client(object):
 
         """
 
-        self.path = path
+        if self._XML_PATH:
+            self.path = path
+        else:
+            self.path = self._XML_PATH
         self.ip = ip
         self.port = port
         self.key = key
@@ -285,7 +293,8 @@ class Client(object):
         try:
             fcn = '[Get("{}")]'.format(var_name)
             self._get_request(fcn)
-            return self._get_xml(var_name)
+            if self._XML_PATH:
+                return self._get_xml(var_name)
         except Exception as e:
             print(e)
             print("Exception in Get function."
@@ -357,8 +366,8 @@ class Client(object):
             request = '&request=disable_recurse'
             url = 'http://{}:{}/{}{}{}&key={}'.format(ip, port, action, output, request, key)
 
-            r = requests.get(url)
-            x = list(r.iter_lines())
+            r = urllib.urlopen(url)
+            x = list(r.readlines())
             root_ = ET.fromstringlist(x[4:])
             response = root_.find('response')
             xml = self.strip_non_ascii(response.text)
@@ -629,14 +638,15 @@ class Client(object):
             port = self.port
             key = self.key
             url = 'http://{}:{}/?action={}&key={}&output=json'.format(ip, port, fcn, key)
-            r = requests.get(url)
-            if r.status_code and r.status_code == 200:
-                x = list(r.iter_lines())[3]
-                j = ast.literal_eval(x)
+#            r = requests.get(url)
+            r = urllib.urlopen(url)
+            if r.code == 200:
+                j = r.readlines()
                 # print(j)
-                result = j['response']
+                response = ast.literal_eval(j[3].strip())
+                result = response['response']
                 # print result
-                err = (j['error'])
+                err = (response['error'])
                 if len(err) > 0:
                     print("v" * 20)
                     z = err + "\n" + result
@@ -647,7 +657,7 @@ class Client(object):
                 else:
                     # print(result)
                     return result
-            elif r.status_code:
+            elif r.code:
                 err = 'Error {}'.format(r.status_code)
                 print(err)
                 return err
@@ -719,8 +729,11 @@ class Client(object):
 
 # Used for testing
 if __name__ == '__main__':
-    ai = Client()
+    ai = Client(ip='192.168.2.11')
     ai.talk('Hello')
+    temp = ai.CallCommand("whats the temperature")
+    print(temp)
+    # print 'here'
     # print(ai.GetWord("test_greetings", "hello", "converted value"))
     # print(ai.GetWord("RSSFeeds", "CNN", "url"))
     # print(ai.GetWord("RSSFeeds", "New York Times", "url"))
@@ -732,8 +745,6 @@ if __name__ == '__main__':
     # test = ai.Get('Pytron')
     # print("This is the second test: ", test)
     # ai.talk(test)
-    # temp = ai.CallCommand("whats the temperature")
-    # print(temp)
     # test = ai.CallCommand("Greetings")
     # print test
     # ai.emulate_speech("open windows explorer")
@@ -751,6 +762,10 @@ if __name__ == '__main__':
 
 
 """
+    Changelog- v.0.3.8
+    - Brought back urllib. Standard library is all we need.
+    - Tweaked Client a bit.
+
     Changelog- v.0.3.7
     - Fixed error on Client initialization
 
