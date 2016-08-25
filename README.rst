@@ -1,5 +1,5 @@
 ==========================================================
-Pytron: A Python library for the LINKS Mark II A.I. v0.3.8
+Pytron: A Python library for the LINKS Mark II A.I. v0.3.9
 ==========================================================
 
 Interface with your Links AI and send commands from within your Python scripts. Send requests through Links Web Service
