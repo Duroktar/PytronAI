@@ -121,7 +121,20 @@ Get confirmation before executing commands. Additional parameters not shown in e
 
 .. code-block:: python
 
-    import pytronlinks as Pytron  # Import Pytron
+    import pytronlinks as Pytron     # Import Pytron
+    """
+            **Make a command in links social tab like this**
+         Command: {response=test_confirm}
+         Response: [Set("Answer", {{response}})]
+         Profile: Main
+         
+            **And add this wordlist to the wordlist folder.**
+          -test_confirm.txt-
+         yes or no answers   clean response
+         yes; yes please; affirmative; do it; go ahead; okay; sure; yup   yes
+         no; dont; stop; no i didnt; nope; no thank you; no thanks  no
+
+    """
 
 
     AI = Pytron.Client()
