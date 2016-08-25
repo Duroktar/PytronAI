@@ -22,7 +22,7 @@ import urllib
 
 
 class Client(object):
-    """ Main Pytron Client v.0.3.8
+    """ Main Pytron Client v.0.3.9
 
          :Example:
 
@@ -571,7 +571,7 @@ class Client(object):
         """
         try:
             self.variable = var_name
-            _path = self.path + r'\UserVariables.xml'
+            _path = self._XML_PATH + r'\UserVariables.xml'
             tree = ET.parse(_path)
             root = tree.getroot()
             response = False
@@ -594,7 +594,7 @@ class Client(object):
         :param var_name: Variable name in xml file
         """
         try:
-            _path = self.path + r'\UserVariables.xml'
+            _path = self._XML_PATH + r'\UserVariables.xml'
             tree = ET.parse(_path)
             root = tree.getroot()
             for variable in root.findall('Variable'):
@@ -612,7 +612,7 @@ class Client(object):
 
     def _check_for_input(self):
         """ Check dictation file for changes """
-        with open(self.path + "\dictation.txt", 'r') as f:
+        with open(self._SCRIPTS_PATH + "\dictation.txt", 'r') as f:
             for line in f:
                 dictation = line
                 f.close()
@@ -625,7 +625,7 @@ class Client(object):
 
     def _clear_input(self):
         """ Deletes any entries in dictation file. Also used to create new file on init. -private """
-        with open(self.path + '\dictation.txt', 'w+') as f:
+        with open(self._SCRIPTS_PATH + '\dictation.txt', 'w+') as f:
             f.close()
 
     def _get_request(self, fcn):
@@ -680,7 +680,7 @@ class Client(object):
             secs = time()
             time_stamp = datetime.datetime.fromtimestamp(secs).strftime('%Y-%m-%d %H:%M:%S')
             history = "{}: {}".format(time_stamp, text)
-            with open(self.path + '\history.txt', 'a') as f:
+            with open(self._SCRIPTS_PATH + '\history.txt', 'a') as f:
                 f.write(history)
                 f.close()
         except Exception as e:
@@ -729,7 +729,7 @@ class Client(object):
 
 # Used for testing
 if __name__ == '__main__':
-    ai = Client(ip='192.168.2.11')
+    ai = Client()
     ai.talk('Hello')
     temp = ai.CallCommand("whats the temperature")
     print(temp)
@@ -738,8 +738,8 @@ if __name__ == '__main__':
     # print(ai.GetWord("RSSFeeds", "CNN", "url"))
     # print(ai.GetWord("RSSFeeds", "New York Times", "url"))
     # ai.Set('Pytron', 'This is the first test')
-    # test = ai.Get('Pytron')
-    # print("This is the first test: ", test)
+    test = ai.Get('Pytron')
+    print("This is the first test: ", test)
     # ai.talk(test)
     # ai.Set('Pytron', 'This is the second test')
     # test = ai.Get('Pytron')
@@ -762,6 +762,9 @@ if __name__ == '__main__':
 
 
 """
+    Changelog- v.0.3.9
+    - Fixed some troublesome local variables.
+
     Changelog- v.0.3.8
     - Brought back urllib. Standard library is all we need.
     - Tweaked Client a bit.
