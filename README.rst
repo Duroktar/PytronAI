@@ -207,6 +207,9 @@ Updates
 =======
 
 **New features!**
+    **Changelog- v.0.3.9**
+      - Fixed some troublesome local variables.
+
     **Changelog- v.0.3.8**
       - Brought back urllib. Standard library is all we need.
       - Tweaked Client a bit.
